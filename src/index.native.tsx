@@ -1,6 +1,7 @@
 import React, { PropsWithChildren, ReactNode } from 'react';
 import {
   Animated,
+  findNodeHandle,
   Image,
   ImageProps,
   Platform,
@@ -210,6 +211,16 @@ class InnerScreen extends React.Component<ScreenProps> {
   private closing = new Animated.Value(0);
   private progress = new Animated.Value(0);
   private goingForward = new Animated.Value(0);
+
+  forceUpdateView(): void {
+    if (this.ref) {
+      UIManager.dispatchViewManagerCommand(
+        findNodeHandle(this.ref),
+        'forceUpdate',
+        []
+      );
+    }
+  }
 
   setNativeProps(props: ScreenProps): void {
     this.ref?.setNativeProps(props);

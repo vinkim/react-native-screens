@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setViewToSnapshot:(UIView *)snapshot;
 - (void)resetViewToScreen;
 #endif
+- (void)forceUpdate;
 
 @end
 
@@ -110,6 +111,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIView (RNSScreen)
 - (UIViewController *)parentViewController;
+- (void)forceUpdate;
 @end
 
 @interface RNSScreenManager : RCTViewManager

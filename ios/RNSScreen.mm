@@ -84,6 +84,11 @@
   _hasHomeIndicatorHiddenSet = NO;
 }
 
+- (void)forceUpdate
+{
+  [_controller.view setNeedsLayout];
+}
+
 - (UIViewController *)reactViewController
 {
   return _controller;
@@ -713,6 +718,11 @@ Class<RCTComponentViewProtocol> RNSScreenCls(void)
   BOOL _shouldNotify;
 }
 
+- (void)forceUpdate
+{
+  [self.view setNeedsLayout];
+}
+
 #pragma mark - Common
 
 - (instancetype)initWithView:(UIView *)view
@@ -1190,6 +1200,18 @@ RCT_EXPORT_VIEW_PROPERTY(onNativeDismissCancelled, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onTransitionProgress, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onWillAppear, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onWillDisappear, RCTDirectEventBlock);
+
+RCT_EXPORT_METHOD(forceUpdate : (nonnull NSNumber *)reactTag)
+{
+  [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
+    RNSScreenView *view = viewRegistry[reactTag];
+    if (!view || ![view isKindOfClass:[RNSScreenView class]]) {
+      RCTLogInfo(@"Cannot find NativeView with tag #%@", reactTag);
+      return;
+    }
+    [view forceUpdate];
+  }];
+};
 
 #if !TARGET_OS_TV
 RCT_EXPORT_VIEW_PROPERTY(screenOrientation, UIInterfaceOrientationMask)
